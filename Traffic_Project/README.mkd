@@ -1,0 +1,125 @@
+# Traffic.py Model Training Documentation
+
+This README summarizes the design, training, and results of the traffic.py image classification model using various convolutional neural network architectures. The goal was to optimize accuracy for traffic sign recognition through systematic architecture experimentation.
+
+Training data [German Traffic Sign Recognition Benchmark (GTSRB)](https://benchmark.ini.rub.de/?section=gtsrb&subsection=news) dataset.
+
+---
+
+### Architecture Testing Overview
+
+| Version         | Conv Blocks | Dense Layers |  Dropout (Conv & Dense) | Train ACC | Val ACC  | Train Loss | Val Loss | Model File         |
+|-----------------|-------------|--------------|-------------------------|-----------|----------|------------|----------|-------------------|
+| v1 (baseline)   | 2           | 1 (128)      | 0.25 & 0.5              | 0.0571    | 0.0552   | 3.4992     | 3.4973   | imgmodel_v1.h5    |
+| v2              | 4           | 1 (128)      | 0.25 & 0.5              | 0.5498    | 0.7137   | 1.3758     | 0.8895   | imgmodel_v2.h5    |
+| v3              | 4           | 2 (128, 64)  | 0.25 & 0.5              | 0.3192    | 0.3709   | 2.0839     | 1.7749   | imgmodel_v3.h5    |
+| v4              | 4           | 2 (128, 64)  | 0.25 & 0.2              | 0.5983    | 0.7545   | 1.1758     | 0.7435   | imgmodel_v4.h5    |
+| v5              | 4           | 3 (128, 64, 32) | 0.25 & 0.2           | 0.4185    | 0.4795   | 1.6531     | 1.4168   | imgmodel_v5.h5    |
+| v6              | 4           | 1 (128)      | 0.25 & 0.2              | 0.7315    | 0.8765   | 0.8379     | 0.3996   | imgmodel_v6.h5    |
+| v7              | 4           | 1 (128)      | 0.25 & 0.2              | 0.7025    | 0.8525   | 0.9211     | 0.4581   | imgmodel_v7.h5    |
+| v8              | 4           | 1 (128)      | 0.20 & 0.2              | 0.8163    | 0.9309   | 0.5781     | 0.2307   | imgmodel_v8.h5    |
+| v9 **(best)**      | 4           | 1 (128)      | 0.20 & 0.2              | **0.8466**    | **0.9579**  | **0.4044**     | **0.1453**   | imgmodel_v9.h5|     
+
+*Median results from three training rounds. For more detailed information and specifics, please check below the version specifications.*
+
+---
+
+### Model Architectures
+
+#### Common Building Blocks
+
+- Conv Block: Conv2D → ReLU → MaxPooling2D → Dropout(see version for rate)
+- Dense Block: Dense → ReLU → Dropout (see version for rate)
+- Output Layer: Dense(NUM_CATEGORIES) → Softmax
+
+#### Architectures
+
+**v1 (Baseline):**
+- 2 Conv Blocks: [32 filters], [64 filters] ; Dropout 0.25.  
+- 1 Dense Layer (128 units, Dropout 0.5)  
+- Poor accuracy; severe underfitting
+
+**v2:**
+- 4 Conv Blocks: [32, 64, 64, 64 filters]  ; Dropout 0.25.
+- 1 Dense Layer (128 units, Dropout 0.5)  
+- Accuracy improved substantially
+
+**v3:**
+- 4 Conv Blocks  [32, 64, 64, 64 filters] ; Dropout 0.25.
+- 2 Dense Layers (128 & 64 units, Dropout 0.5)  
+- Lower accuracy, possibly due to overregularization
+
+**v4:**
+- Same as v3, but reduced dense layer dropout (0.2)  
+- Strong gain in accuracy
+
+**v5:**
+- 4 Conv Blocks  [32, 64, 64, 64 filters] ; Dropout 0.25.
+- 3 Dense Layers (128, 64, 32 units, Dropout 0.2)  
+- Accuracy decreased, suggesting excessive depth harms performance
+
+**v6:**
+- 4 Conv Blocks  [32, 64, 64, 64 filters] ; Dropout 0.25.
+- 1 Dense Layer (128 units, Dropout 0.2)  
+
+---
+
+**v7 :**
+
+- 4 Conv Blocks  [64, 64, 64, 64 filters] ; Dropout 0.25.
+- 1 Dense Layer (128 units, Dropout 0.2)  
+
+---
+
+**v8 :**
+
+- 4 Conv Blocks  [64, 64, 64, 64 filters] ; Dropout 0.2.
+- 1 Dense Layer (128 units, Dropout 0.2)  
+- Highest and most stable accuracy
+
+**v8 :**
+
+- 4 Conv Blocks  [32, 64, 128, 256 filters] ; Dropout 0.2.
+- 1 Dense Layer (128 units, Dropout 0.2)  
+- Highest and most stable accuracy
+
+
+### Key Results
+
+#### v9 Repeated Training Runs
+
+- Train Accuracy (Median): 0.8466 
+- Validation Accuracy (Median): 0.9579 
+- Train Loss (Median): 0.4044
+- Validation Loss (Median): 0.1453
+
+---
+
+### Conclusions
+
+- Increased convolutional depth (4 blocks) with increasing filtering (for each conv layer) and moderate dropout of (0.2) significantly improves accuracy.
+- One dense layer with moderate dropout (0.2) after the convolutional stack is optimal.  
+- Excess dense layers or excessive dropout inhibit learning; simplicity and balanced regularization yield best results.
+
+---
+
+### Model Files
+
+- imgmodel_v1.h5  
+- imgmodel_v2.h5  
+- imgmodel_v3.h5  
+- imgmodel_v4.h5  
+- imgmodel_v5.h5  
+- imgmodel_v6.h5
+- imgmodel_v7.h5
+- imgmodel_v8.h5
+- imgmodel_v9.h5
+
+Each file stores a trained Keras model for its respective architecture version.
+
+---
+
+### Next Steps
+
+- Experiment with data augmentation and learning rate schedules to further improve generalization.  
+- Consider benchmarking with advanced architectures (e.g., pretrained ResNet, MobileNet) for portfolio depth.
