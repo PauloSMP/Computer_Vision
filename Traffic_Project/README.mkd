@@ -77,7 +77,9 @@ Training data [German Traffic Sign Recognition Benchmark (GTSRB)](https://benchm
 - 1 Dense Layer (128 units, Dropout 0.2)  
 - Highest and most stable accuracy
 
-**v8 :**
+---
+
+**v9 :**
 
 - 4 Conv Blocks  [32, 64, 128, 256 filters] ; Dropout 0.2.
 - 1 Dense Layer (128 units, Dropout 0.2)  
