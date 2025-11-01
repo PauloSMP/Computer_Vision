@@ -39,24 +39,34 @@ Training data [German Traffic Sign Recognition Benchmark (GTSRB)](https://benchm
 - 1 Dense Layer (128 units, Dropout 0.5)  
 - Poor accuracy; severe underfitting
 
+---
+
 **v2:**
 - 4 Conv Blocks: [32, 64, 64, 64 filters]  ; Dropout 0.25.
 - 1 Dense Layer (128 units, Dropout 0.5)  
 - Accuracy improved substantially
+
+---
 
 **v3:**
 - 4 Conv Blocks  [32, 64, 64, 64 filters] ; Dropout 0.25.
 - 2 Dense Layers (128 & 64 units, Dropout 0.5)  
 - Lower accuracy, possibly due to overregularization
 
+---
+
 **v4:**
 - Same as v3, but reduced dense layer dropout (0.2)  
 - Strong gain in accuracy
+
+---
 
 **v5:**
 - 4 Conv Blocks  [32, 64, 64, 64 filters] ; Dropout 0.25.
 - 3 Dense Layers (128, 64, 32 units, Dropout 0.2)  
 - Accuracy decreased, suggesting excessive depth harms performance
+
+---
 
 **v6:**
 - 4 Conv Blocks  [32, 64, 64, 64 filters] ; Dropout 0.25.
